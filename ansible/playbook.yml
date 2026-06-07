@@ -1,0 +1,53 @@
+---
+- hosts: minecraft
+  become: yes
+
+  tasks:
+
+    - name: Update apt packages
+      apt:
+        update_cache: yes
+
+    - name: Install Java
+      apt:
+        name: openjdk-21-jdk
+        state: present
+
+    - name: Download Minecraft server
+      get_url:
+        url: https://launcher.mojang.com/v1/objects/4707d00eb834b446575d89a61a11b5d548d8c001/server.jar
+        dest: /home/ubuntu/server.jar
+        mode: '0755'
+
+    - name: Create EULA file
+      copy:
+        dest: /home/ubuntu/eula.txt
+        content: "eula=true"
+
+    - name: Create Minecraft systemd service
+      copy:
+        dest: /etc/systemd/system/minecraft.service
+        content: |
+          [Unit]
+          Description=Minecraft Server
+          After=network.target
+
+          [Service]
+          User=ubuntu
+          WorkingDirectory=/home/ubuntu
+          ExecStart=/usr/bin/java -Xmx700M -Xms512M -jar /home/ubuntu/server.jar nogui
+          ExecStop=/bin/kill -s SIGTERM $MAINPID
+          Restart=on-failure
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable Minecraft service
+      systemd:
+        name: minecraft
+        enabled: yes
+        state: started
