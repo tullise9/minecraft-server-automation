@@ -46,7 +46,7 @@ aws configure
 
 An AWS EC2 key pair must be created before deployment.
 
-Example:
+Name your key-pair, here is an example:
 
 ```bash
 aws ec2 create-key-pair \
@@ -113,15 +113,13 @@ cd terraform
 terraform output public_ip
 ```
 
-```text
 You will need this to verify the Minecraft Server is running
-```
 
 ---
 
 # Verifying the Minecraft Server
 
-Run the following command from the local machine:
+Run the following command from your local machine:
 
 ```bash
 nmap -sV -Pn -p T:25565 <public-ip>
@@ -130,6 +128,7 @@ nmap -sV -Pn -p T:25565 <public-ip>
 ```text
 Expected output: 25565/tcp open
 ```
+This shows the Minecraft Server is running and you can connect to it
 
 ---
 
