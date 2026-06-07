@@ -24,7 +24,7 @@ The following software must be installed on your local machine:
 
 ---
 
-## AWS Requirements
+## AWS
 
 You will need these values from your active AWS account:
 
